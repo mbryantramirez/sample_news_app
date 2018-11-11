@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import nyc.aisleone.paginationexample.R;
@@ -16,10 +19,9 @@ import nyc.aisleone.paginationexample.models.TopHeadlines;
 
 public class TopHeadlinesAdapter extends RecyclerView.Adapter<TopHeadlinesAdapter.TopHeadlinesViewHolder> {
 
-    private List<ArticlesItem> articlesItems;
+    private List<ArticlesItem> articlesItems = new ArrayList<>();
 
     public TopHeadlinesAdapter() {
-
     }
 
     public void addArticles(List<ArticlesItem> articlesItems) {
@@ -37,11 +39,20 @@ public class TopHeadlinesAdapter extends RecyclerView.Adapter<TopHeadlinesAdapte
     @Override
     public void onBindViewHolder(@NonNull TopHeadlinesViewHolder topHeadlinesViewHolder, int i) {
 
+        topHeadlinesViewHolder.articleTitle.setText(articlesItems.get(i).getTitle());
+        topHeadlinesViewHolder.articleDescription.setText(articlesItems.get(i).getDescription());
+        topHeadlinesViewHolder.articleDescription.setSelected(true);
+        Picasso.get()
+                .load(articlesItems.get(i).getUrlToImage())
+                .error(R.mipmap.ic_launcher)
+                .placeholder(R.mipmap.ic_launcher)
+                .fit().centerCrop()
+                .into(topHeadlinesViewHolder.articleImage);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return articlesItems.size();
     }
 
     public static class TopHeadlinesViewHolder extends RecyclerView.ViewHolder {
@@ -52,7 +63,9 @@ public class TopHeadlinesAdapter extends RecyclerView.Adapter<TopHeadlinesAdapte
 
         public TopHeadlinesViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            articleTitle = itemView.findViewById(R.id.tv_article_title);
+            articleImage = itemView.findViewById(R.id.iv_article_image);
+            articleDescription = itemView.findViewById(R.id.tv_article_desc);
         }
     }
 }

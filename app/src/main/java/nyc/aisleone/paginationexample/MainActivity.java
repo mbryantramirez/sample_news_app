@@ -6,7 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import java.util.List;
+
 import nyc.aisleone.paginationexample.adapters.TopHeadlinesAdapter;
+import nyc.aisleone.paginationexample.models.ArticlesItem;
 import nyc.aisleone.paginationexample.models.TopHeadlines;
 import nyc.aisleone.paginationexample.utils.NewsService;
 import nyc.aisleone.paginationexample.utils.Retrofit2Client;
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         topHeadlinesRecyclerView.setLayoutManager(layoutManager);
 
         topHeadlinesAdapter = new TopHeadlinesAdapter();
-
+        topHeadlinesRecyclerView.setAdapter(topHeadlinesAdapter);
 
         Call<TopHeadlines> topHeadlinesCall = newsService.loadTopHeadlines();
 
@@ -37,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<TopHeadlines> call, Response<TopHeadlines> response) {
 
+                if (response.body() != null) {
+                    List<ArticlesItem> headlines = response.body().getArticles();
+                    topHeadlinesAdapter.addArticles(headlines);
+                    topHeadlinesAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
